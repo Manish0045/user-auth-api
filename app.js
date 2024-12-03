@@ -7,6 +7,8 @@ app.use(express.urlencoded({ extended: true, limit: '30kb' }));
 
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? "*" }));
 
+app.use('/api', require('./routes/user.routes'));
+
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || "Something went wrong!";

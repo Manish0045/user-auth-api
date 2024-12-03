@@ -1,4 +1,5 @@
 const app = require('./app');
+const { connectDB } = require("./db/dbConnection");
 
 const startServer = () => {
     const PORT = process.env.PORT ?? 8000;
@@ -12,4 +13,8 @@ const startServer = () => {
     }
 };
 
-startServer();
+connectDB()
+    .then(() => startServer())
+    .catch((err) => {
+        console.log("Something Went wrong while connecting to DATABASE", err.message);
+    });
