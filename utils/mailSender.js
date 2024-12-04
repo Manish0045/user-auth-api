@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendMail = async (email) => {
+const sendActivationMail = async (name, email) => {
 
     const confirmationLink = `http://localhost:0045/confirm-email?email=${email}`;
 
@@ -19,7 +19,7 @@ const sendMail = async (email) => {
         to: email,
         subject: "Email Confirmation",
         text: `Please click the following link to confirm your email: ${confirmationLink}`,
-        html: `<p>Please click the following link to confirm your email:</p><a href="${confirmationLink}">${confirmationLink}</a>`
+        html: `<h4>Dear ${name},</h4><h5>Your profile has been created !</h5><br/><p>Please click the following link to confirm your email:</p><a href="${confirmationLink}">${confirmationLink}</a><h5>To activate your account</h5>`
     };
 
     const sentData = await transporter.sendMail(mailOptions);
@@ -27,4 +27,4 @@ const sendMail = async (email) => {
 }
 
 
-module.exports = { sendMail };
+module.exports = { sendActivationMail };

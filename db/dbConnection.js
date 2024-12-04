@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { DATABASE } = require("../utils/constants");
+const { DB_NAME } = require("../utils/constants");
 
 const connectDB = async () => {
-    const MONGO_URL = process.env.MONGO_URI + DATABASE;
+    const MONGO_URL = process.env.MONGO_URI + DB_NAME;
     try {
         const connectionInstance = await mongoose.connect(MONGO_URL);
         console.log("Database Connected!");
