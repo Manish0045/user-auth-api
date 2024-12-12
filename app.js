@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require('cors');
 
 const app = express();
-app.use(express.json({ limit: '30kb' }));
-app.use(express.urlencoded({ extended: true, limit: '30kb' }));
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: true, limit: '50kb' }));
 
 app.use(cors({ origin: process.env.CORS_ORIGIN ?? "*" }));
 
