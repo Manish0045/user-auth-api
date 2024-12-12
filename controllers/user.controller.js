@@ -1,8 +1,8 @@
 const { CustomError } = require('../middlewares/errorHandler');
 const { User } = require('../models/user.model');
 const { ApiResponse } = require('../middlewares/apiResponse');
-const { sendActivationMail } = require('../utils/mailSender');
-const { hashPassword } = require('../utils/constants');
+const { sendActivationMail } = require('../utils/mailServices');
+const { hashPassword, comparePassword, generateToken } = require('../utils/constants');
 
 const signUpUser = async (req, res) => {
     try {
@@ -43,8 +43,24 @@ const signUpUser = async (req, res) => {
 }
 
 const loginUser = async (req, res) => {
-
+    const { username, email, password } = req.body;
     try {
+        if (!username && !email) throw new CustomError(404, "Enter required Details");
+
+        if (!password) throw new CustomError(404, "Password is required!");
+
+        const user = await User.findOne({ $or: [{ username }, { email }] });
+
+        const passwordMatch = await comparePassword(password, user.password);
+
+        if (!passwordMatch) throw new CustomError(404, "Invalid Credentials");
+
+        const token = generateToken({ _id: user._id, secret: process.env.SECRET_KEY });
+
+        user.isActive = true;
+        await user.save({ validateBeforeSave: false });
+
+        return res.status(200).json(new ApiResponse(200, { name: user.name, email: user.email, token }, "Logged In SuccessFully!"));
 
     } catch (error) {
         console.error(error);
