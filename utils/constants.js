@@ -2,11 +2,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { CustomError } = require('../middlewares/errorHandler');
 
-const DB_NAME = "user-auth";
+const DB_NAME = process.env.DB_NAME || "user-auth";
 
 const STATUS_CODES = {
     OK: 200,
     CREATED: 201,
+    ACCEPTED: 202,
     NO_CONTENT: 204,
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
@@ -14,7 +15,6 @@ const STATUS_CODES = {
     NOT_FOUND: 404,
     CONFLICT: 409,
     INTERNAL_SERVER_ERROR: 500,
-    ACCEPTED: 202,
 };
 
 
@@ -23,15 +23,9 @@ const generateToken = ({ _id, secret }) => {
     return jwt.sign({ _id }, secret);
 }
 
-const hashPassword = async (password) => {
-    return await bcrypt.hash(password, 10);
+const hashPassword = async (password) => await bcrypt.hash(password, 10);
 
-}
-
-const comparePassword = async (password, hashedPassword) => {
-    return await bcrypt.compare(password, hashedPassword);
-}
-
+const comparePassword = async (password, hashedPassword) => await bcrypt.compare(password, hashedPassword);
 
 
 module.exports = {

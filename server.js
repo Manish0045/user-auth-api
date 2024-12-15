@@ -2,7 +2,7 @@ const app = require('./app');
 const { connectDB } = require("./db/dbConnection");
 
 const startServer = () => {
-    const PORT = process.env.PORT ?? 8000;
+    const PORT = process.env.PORT || 8000;
     try {
         app.listen(PORT, () => {
             console.log("Server started! PORT:", PORT);
@@ -16,5 +16,6 @@ const startServer = () => {
 connectDB()
     .then(() => startServer())
     .catch((err) => {
-        console.log("Something Went wrong while connecting to DATABASE", err.message);
+        console.error("Database connection failed", err.message);
+        process.exit(1);
     });

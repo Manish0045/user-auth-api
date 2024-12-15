@@ -1,7 +1,8 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
     secure: true,
     auth: {
         user: process.env.USER_EMAIL,
@@ -15,7 +16,7 @@ const sendActivationMail = async (name, email) => {
     const mailOptions = {
         from: process.env.USER_EMAIL,
         to: email,
-        subject: "Email Confirmation",
+        subject: "Registration Confirmation",
         text: `Hello ${name},\n\nPlease click the following link to confirm your email:\n${confirmationLink}`,
         html: `
             <html>
@@ -36,6 +37,7 @@ const sendActivationMail = async (name, email) => {
         console.log('Email sent: ' + info.response);
     } catch (error) {
         console.log('Error: ', error);
+        throw new Error("Failed to send email");
     }
 };
 
