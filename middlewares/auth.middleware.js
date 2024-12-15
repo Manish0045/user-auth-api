@@ -4,7 +4,7 @@ const { User } = require('../models/user.model');
 
 const verifyJWT = async (req, _, next) => {
     try {
-        const token = req.cookies?.accessToken || req.header("Authentication")?.replace("Bearer", "");
+        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "");
 
         if (!token) {
             throw new CustomError(401, "Unauthorized request");
@@ -12,7 +12,7 @@ const verifyJWT = async (req, _, next) => {
 
         const decodedData = await jwt.verify(token, process.env.SECRET_KEY);
 
-        const user = await User.findById(decodedData._id).select("-password");
+        const user = await User.findById(decodedData?._id).select("-password");
 
         if (!user) {
             throw new CustomError(404, "Invalid Access Token!");
@@ -21,8 +21,15 @@ const verifyJWT = async (req, _, next) => {
         req.user = user;
         next();
     } catch (error) {
-        console.log("Error verifying user", err.message);
-        throw new CustomError(error.statusCode || 500, error.message);
+        console.log("Error verifying user", error.message);
+
+        if (error.name === "TokenExpiredError") {
+            return next(new CustomError(401, "Token has expired"));
+        } else if (error.name === "JsonWebTokenError") {
+            return next(new CustomError(400, "Invalid token"));
+        }
+
+        next(error);
     }
 };
 
