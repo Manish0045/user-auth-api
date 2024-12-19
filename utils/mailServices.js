@@ -1,27 +1,29 @@
 const nodemailer = require('nodemailer');
+const { CustomError } = require('../middlewares/errorHandler');
+const { STATUS_CODES } = require('./constants');
 
 const transporter = nodemailer.createTransport({
     host: process.env.MAIL_HOST,
     port: process.env.MAIL_PORT,
-    secure: true,
     auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.USER_PASS
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
     }
 });
 
-const sendActivationMail = async (name, email) => {
-    const confirmationLink = `http://localhost:0045/api/confirm-email?email=${email}`;
+const sendActivationMail = async (username, email) => {
+    const url = 'http://localhost:3287/api';
+    const confirmationLink = `${url}/confirm-email?email=${email}`;
 
     const mailOptions = {
-        from: process.env.USER_EMAIL,
+        from: process.env.MAIL_USER,
         to: email,
         subject: "Registration Confirmation",
-        text: `Hello ${name},\n\nPlease click the following link to confirm your email:\n${confirmationLink}`,
+        text: `Hii ${username}!,\n\nPlease click the following link to confirm your email:\n${confirmationLink}`,
         html: `
             <html>
                 <body style="font-family: Arial, sans-serif; color: #333;">
-                    <h4>Dear ${name},</h4>
+                    <h4>Dear ${username},</h4>
                     <p>Thank you for registering with us! Please activate your account by clicking the link below:</p>
                     <p><a href="${confirmationLink}" style="color: #042DC3FF; font-size: 16px; font-weight: bold;">Activate My Account</a></p>
                     <h5>To activate your account</h5>
@@ -37,7 +39,7 @@ const sendActivationMail = async (name, email) => {
         console.log('Email sent: ' + info.response);
     } catch (error) {
         console.log('Error: ', error);
-        throw new Error("Failed to send email");
+        throw new CustomError(STATUS_CODES.FORBIDDEN, "Failed to send email");
     }
 };
 

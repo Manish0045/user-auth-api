@@ -88,7 +88,8 @@ Before you begin, ensure that you have the following software installed on your 
 
    ```bash
    PORT=5000
-   MONGO_URI=mongodb://localhost:27017/user-auth
+   MONGO_URI=mongodb://localhost:27017/
+   DB_NAME=user-auth
    SECRET_KEY=your-secret-key
    CORS_ORIGIN=http://localhost:3000
    MAIL_HOST=smtp.mailtrap.io
@@ -114,3 +115,5 @@ After installation and configuration, you can start the project by running the f
 ```bash
 npm start
 ```
+
+## API Endpoints

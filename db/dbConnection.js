@@ -4,6 +4,7 @@ const { DB_NAME } = require("../utils/constants");
 const connectDB = async () => {
     const MONGO_URL = process.env.MONGO_URI + DB_NAME;
     try {
+        //Connecting to mongoDB Database
         const connectionInstance = await mongoose.connect(MONGO_URL);
         console.log("Database Connected!");
         console.log("DATABASE:", connectionInstance.connection.name, " HOST:", connectionInstance.connection.host);
