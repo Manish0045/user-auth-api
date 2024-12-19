@@ -42,6 +42,7 @@ const signUpUser = async (req, res, next) => {
         return res.status(STATUS_CODES.CREATED).json(new ApiResponse(STATUS_CODES.CREATED, createdUser, "Account successfully created. Please check your email for activation."));
 
     } catch (error) {
+        // Pass error to the error handling middleware
         next(error);
     }
 };
